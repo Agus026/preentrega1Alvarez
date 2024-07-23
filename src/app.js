@@ -3,8 +3,8 @@ const app = express();
 const PUERTO = 8080;
 const productRouter = require ("./routes/products.router");
 app.use(productRouter)
-
-
+const cartRouter = require ("./routes/cart.router");
+app.use(cartRouter)
 
 
 

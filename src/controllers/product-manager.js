@@ -18,20 +18,20 @@ class ProductManager {
 
 
         if (!title || !description || !price || !img || !code || !stock || !category) {
-            console.log("Todos los campos son obligatorios");
-            return;
+           throw new MiError("Todos los campos son obligatorios");
+            
         }
 
         this.products = await this.leerArchivo()
 
         if (this.products.some(item => item.code === code)) {
-            console.log("El codigo debe ser unico");
-            return;
+            throw new MiError("El codigo debe ser unico");
+            
         }
 
 
         const nuevoProducto = {
-            id: this.products.length +1,
+            id: this.products.length + 1,
             title,
             description,
             price,
@@ -60,7 +60,7 @@ class ProductManager {
         const buscado = this.products.find(item => item.id === id);
 
         if (!buscado) {
-            return "Not found";
+            throw new MiError("Not found");
         } else {
             return buscado;
         }
@@ -77,17 +77,33 @@ class ProductManager {
         await fs.writeFile(this.path, JSON.stringify(arrayProductos, null, 2));
     }
 
-    async actualizarProducto(id, productoB) {        
-        const productoA = await this.getProductById(id)        
-        const resultado = overwriteProperties(productoB, productoA );
-       
-       await this.guardarArchivo(this.products); 
-              
+    async actualizarProducto(id, productoB) {
+        const productoA = await this.getProductById(id)
+        const resultado = overwriteProperties(productoB, productoA);
+
+        await this.guardarArchivo(this.products);
+
         console.log(resultado)
     }
-    
-    
+    async eliminarProducto(pid) {
+        this.products = await this.leerArchivo()
+        const productIndex = this.products.findIndex(p => p.id === pid);
+
+        if (productIndex === -1) {
+
+            return "Producto eliminado correctamente"
+        }
+        
+        this.products.splice(productIndex, 1);
+        await this.guardarArchivo(this.products)
+        return "Producto eliminado correctamente";
+
+    }
+
 }
 
-module.exports = ProductManager;
+class MiError extends Error {
+
+}
+module.exports = {ProductManager, MiError}
 

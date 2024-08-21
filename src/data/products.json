@@ -1,13 +1,5 @@
 [
   {
-    "title": "Arroz",
-    "description": "Arroz blanco",
-    "price": "1200",
-    "code": "jkl012",
-    "stock": 80,
-    "id": 4
-  },
-  {
     "title": "Azúcar",
     "description": "Azúcar blanca",
     "price": "500",

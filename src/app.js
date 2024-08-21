@@ -1,3 +1,7 @@
+const {ProductManager} = require("./controllers/product-manager");
+const { default: mongoose } = require("mongoose");
+const manager = new ProductManager("./src/data/products.json")
+
 
 const express = require("express");
 const app = express();
@@ -7,6 +11,8 @@ app.use(productRouter);
 const cartRouter = require("./routes/cart.router");
 app.use(cartRouter);
 const viewsRouter = require("./routes/views.router");
+
+mongoose.connect("mongodb+srv://agustinalvarez:Agusdb@cluster0.r0mj1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 const socket = require("socket.io")
 
@@ -28,8 +34,6 @@ const httpServer = app.listen(PUERTO, () => {
     console.log(`Escuchando en el puerto https:localhost:${8080}`)
 });
 
-const {ProductManager} = require("./controllers/product-manager")
-const manager = new ProductManager("./src/data/products.json")
 
 
 const io = socket(httpServer);

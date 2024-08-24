@@ -5,13 +5,13 @@ const manager = new ProductManager ("./src/data/products.json")
 
 
 
-router.get("/product", async (req, res)=>{
+router.get("/api/products", async (req, res)=>{
     const productos = await manager.getProducts();
     res.render("home", {productos})
 })
 
-router.get("/realtimeproducts",async(req, res)=>{
-    res.render("realtimeproducts")
+router.get("/products",async(req, res)=>{
+    res.render("products")
 })
 
 module.exports = router;

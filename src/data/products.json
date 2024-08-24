@@ -4,47 +4,140 @@
     "description": "Azúcar blanca",
     "price": "500",
     "code": "mno345",
-    "stock": 120,
-    "id": 5
+    "stock": 120
   },
   {
     "title": "Café",
     "description": "Café molido",
-    "price": "2500",
-    "code": "pqr678",
-    "stock": 50,
-    "id": 6
-  },
-  {
-    "title": "Jabón",
-    "description": "Jabón en barra",
     "price": "700",
-    "code": "stu901",
-    "stock": 150,
-    "id": 7
+    "code": "abc123",
+    "stock": 50
   },
   {
-    "title": "Yogur",
-    "description": "Yogur natural",
-    "price": "600",
-    "code": "vwx234",
-    "stock": 90,
-    "id": 8
+    "title": "Harina",
+    "description": "Harina de trigo",
+    "price": "450",
+    "code": "def456",
+    "stock": 200
   },
   {
     "title": "Aceite",
     "description": "Aceite de oliva",
-    "price": "2000",
-    "code": "yzw567",
-    "stock": 70,
-    "id": 9
+    "price": "1200",
+    "code": "ghi789",
+    "stock": 80
   },
   {
-    "title": "Papel higiénico",
-    "description": "Papel higiénico suave",
-    "price": "1500",
-    "code": "abc890",
-    "stock": 120,
-    "id": 10
+    "title": "Arroz",
+    "description": "Arroz blanco",
+    "price": "400",
+    "code": "jkl012",
+    "stock": 150
+  },
+  {
+    "title": "Sal",
+    "description": "Sal fina",
+    "price": "100",
+    "code": "mno345",
+    "stock": 300
+  },
+  {
+    "title": "Leche",
+    "description": "Leche entera",
+    "price": "600",
+    "code": "pqr678",
+    "stock": 120
+  },
+  {
+    "title": "Manteca",
+    "description": "Manteca vegetal",
+    "price": "900",
+    "code": "stu901",
+    "stock": 60
+  },
+  {
+    "title": "Huevos",
+    "description": "Docena de huevos",
+    "price": "300",
+    "code": "vwx234",
+    "stock": 180
+  },
+  {
+    "title": "Queso",
+    "description": "Queso fresco",
+    "price": "1100",
+    "code": "yzb567",
+    "stock": 70
+  },
+  {
+    "title": "Yogur",
+    "description": "Yogur natural",
+    "price": "350",
+    "code": "cde890",
+    "stock": 140
+  },
+  {
+    "title": "Pan",
+    "description": "Pan de molde",
+    "price": "450",
+    "code": "fgh123",
+    "stock": 100
+  },
+  {
+    "title": "Mermelada",
+    "description": "Mermelada de frutas",
+    "price": "500",
+    "code": "ijk456",
+    "stock": 130
+  },
+  {
+    "title": "Miel",
+    "description": "Miel natural",
+    "price": "850",
+    "code": "lmn789",
+    "stock": 90
+  },
+  {
+    "title": "Cereal",
+    "description": "Cereal integral",
+    "price": "600",
+    "code": "opq012",
+    "stock": 200
+  },
+  {
+    "title": "Chocolate",
+    "description": "Chocolate amargo",
+    "price": "750",
+    "code": "rst345",
+    "stock": 110
+  },
+  {
+    "title": "Té",
+    "description": "Té verde",
+    "price": "300",
+    "code": "uvw678",
+    "stock": 220
+  },
+  {
+    "title": "Galletas",
+    "description": "Galletas de avena",
+    "price": "550",
+    "code": "xyz901",
+    "stock": 160
+  },
+  {
+    "title": "Jugo",
+    "description": "Jugo de naranja",
+    "price": "500",
+    "code": "abc234",
+    "stock": 140
+  },
+  {
+    "title": "Pasta",
+    "description": "Pasta de sémola",
+    "price": "700",
+    "code": "def567",
+    "stock": 190
   }
+  
 ]

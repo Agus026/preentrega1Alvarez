@@ -46,5 +46,14 @@ cart.post('/cart/:cid/product/:pid', async (req, res) => {
         }
     }
 });
+cart.post("/", async (req, res) =>{
+    try {
+      const newCart = await CarritoManager.createCart()  
+      res.json(newCart)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error: "error interno del servidor"})                
+    }
+})
 
 module.exports = cart;

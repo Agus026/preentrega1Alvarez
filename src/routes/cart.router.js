@@ -2,10 +2,10 @@ const express = require('express');
 const cart = express.Router();
 cart.use(express.json());
 const CarritoManager = require("../controllers/carrito-manager");
-const manager = new CarritoManager("./src/data/carrito.json", "./src/data/products.json")
-const { MiError } = require("../controllers/product-manager")
+const manager = new CarritoManager("./src/data/carrito.json", "./src/data/products.json");
+const { MiError } = require("../controllers/product-manager");
 
-cart.post("/cart", async (req, res) => {
+cart.post("/", async (req, res) => {
     try {
         let carrito = await manager.getNewCart()
         res.status(200).send(carrito)
@@ -16,33 +16,65 @@ cart.post("/cart", async (req, res) => {
 
 })
 
-cart.get('/cart/:cid', async (req, res) => {
-    const id = parseInt(req.params.cid)
+cart.delete('/:cid/products/:pid', async (req, res) => {
+    const cid = parseInt(req.params.cid);
+    const pid = parseInt(req.params.pid);
     try {
-        let miCarrito = await manager.listarProductos(id)
-        res.status(200).send(miCarrito)
+        await manager.eliminarProductoDelCarrito(cid, pid);
+        res.status(200).send(`Producto con id ${pid} eliminado del carrito ${cid}`);
     } catch (error) {
-        console.log(error)
         if (error instanceof MiError) {
-            res.status(404).send({ message: error.message })
+            res.status(404).send({ message: error.message });
         } else {
-            res.status(500).send({ status: "Error", messsage: "Error finding the product" })
+            res.status(500).send({ status: "Error", message: "Error eliminando el producto" });
         }
     }
 });
 
-cart.post('/cart/:cid/product/:pid', async (req, res) => {
-
+cart.put('/:cid', async (req, res) => {
+    const cid = parseInt(req.params.cid);
+    const productos = req.body;
     try {
-        const cid = parseInt(req.params.cid)
-        const pid = parseInt(req.params.pid)
-        await manager.agregarAlCarrito(cid, pid)
-        res.status(201).send("Se agrego con exito")
+        await manager.actualizarCarrito(cid, productos);
+        res.status(200).send(`Carrito ${cid} actualizado`);
     } catch (error) {
+        res.status(500).send({ status: "Error", message: "Error actualizando el carrito" });
+    }
+});
+
+cart.put('/:cid/products/:pid', async (req, res) => {
+    const cid = parseInt(req.params.cid);
+    const pid = parseInt(req.params.pid);
+    const { cantidad } = req.body;
+    try {
+        await manager.actualizarCantidadProducto(cid, pid, cantidad);
+        res.status(200).send(`Cantidad del producto ${pid} en el carrito ${cid} actualizada a ${cantidad}`);
+    } catch (error) {
+        res.status(500).send({ status: "Error", message: "Error actualizando la cantidad del producto" });
+    }
+});
+
+cart.delete('/:cid', async (req, res) => {
+    const cid = parseInt(req.params.cid);
+    try {
+        await manager.eliminarTodosLosProductos(cid);
+        res.status(200).send(`Todos los productos del carrito ${cid} han sido eliminados`);
+    } catch (error) {
+        res.status(500).send({ status: "Error", message: "Error eliminando los productos del carrito" });
+    }
+});
+
+cart.get('/:cid', async (req, res) => {
+    const id = parseInt(req.params.cid);
+    try {
+        let miCarrito = await manager.listarProductosConPopulate(id);
+        res.status(200).send(miCarrito);
+    } catch (error) {
+        console.log(error);
         if (error instanceof MiError) {
-            res.status(404).send({ message: error.message })
+            res.status(404).send({ message: error.message });
         } else {
-            res.status(500).send({ status: "Error", messsage: "Error finding the product" })
+            res.status(500).send({ status: "Error", message: "Error encontrando los productos" });
         }
     }
 });

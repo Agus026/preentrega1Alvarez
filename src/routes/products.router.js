@@ -1,90 +1,45 @@
 const express = require("express");
 const router = express.Router();
-const { MiError, ProductManager } = require("../controllers/product-manager")
-const manager = new ProductManager("./src/data/products.json")
-
-
+const { MiError, ProductManager } = require("../controllers/product-manager");
+const manager = new ProductManager();
 
 router.use(express.json());
 
-router.get("/products", async (req, res) => {
-    let limit = req.query.limit;
+router.get("/", async (req, res) => {
+    let limit = parseInt(req.query.limit) || 10;
+    let page = parseInt(req.query.page) || 1;
+    let sort = req.query.sort === 'asc' ? 1 : req.query.sort === 'desc' ? -1 : null;
+    let query = req.query.query ? { $or: [{ category: req.query.query }, { status: req.query.query === 'true' }] } : {};
+    
     try {
-        const arrayProducts = await manager.getProducts();
+        const options = {
+            limit: limit,
+            page: page,
+            sort: sort !== null ? { price: sort } : {}
+        };
+        
+        const ProductList = await manager.getProductsPaginated(query, options);
 
-        if (limit) {
-            res.send(arrayProducts.slice(0, limit));
-        } else {
-            res.send(arrayProducts);
-        }
+        const response = {
+            status: "success",
+            payload: ProductList.docs,
+            totalPages: ProductList.totalPages,
+            prevPage: ProductList.hasPrevPage ? ProductList.prevPage : null,
+            nextPage: ProductList.hasNextPage ? ProductList.nextPage : null,
+            page: ProductList.page,
+            hasPrevPage: ProductList.hasPrevPage,
+            hasNextPage: ProductList.hasNextPage,
+            prevLink: ProductList.hasPrevPage ? `/api/products?limit=${limit}&page=${ProductList.prevPage}&sort=${req.query.sort || ''}&query=${req.query.query || ''}` : null,
+            nextLink: ProductList.hasNextPage ? `/api/products?limit=${limit}&page=${ProductList.nextPage}&sort=${req.query.sort || ''}&query=${req.query.query || ''}` : null
+        };
+
+        res.status(200).send(response);
 
     } catch (error) {
-        console.log(error)
-        res.status(500).send("Error del servidor")
-    }
-})
-
-router.get("/products/:pid", async (req, res) => {
-    try {
-        let id = req.params.pid;
-        const product = await manager.getProductById(parseInt(id));
-        res.status(200).send(product)
-    } catch (error) {
-        if (error instanceof MiError) {
-            res.status(404).send({ message: error.message })
-        } else {
-            res.send(500).send({status: "Error", message: "Error when adding product"});
-        }
-    }
-
-
-})
-router.post("/products", async (req, res) => {
-    const newProduct = req.body;
-    try {
-        await manager.addProduct(newProduct);
-        res.status(201).send({ message: "The new product was added succefuly" })
-    } catch (error) {
-        console.log(error)
-        if (error instanceof MiError) {
-            res.status(400).send({ message: error.message })
-        } else {
-            res.status(500).send({ status: "Error", messsage: "Error when adding product" })
-        }
-    }
-})
-router.put("/products/:pid", async (req, res) => {
-    let id = req.params.pid;
-    const producto = req.body;
-    try {
-        await manager.actualizarProducto(parseInt(id), producto)
-        res.status(201).send({ message: "The product was update succefuly" })
-    } catch (error) {
-
-        if (error instanceof MiError) {
-            res.status(404).send({ message: error.message })
-        } else {
-            res.status(500).send({ messsage: "Error when updateing product" })
-        }
-    }
-})
-router.delete('/products/:pid', async (req, res) => {
-    const pid = parseInt(req.params.pid);
-    try {
-        let respuesta = await manager.eliminarProducto(pid)
-
-        res.status(200).send({ mensage: respuesta })
-
-
-    } catch (error) {
-        if (error instanceof MiError) {
-            res.status(404).send({ message: error.message })
-        } else {
-            console.log(error)
-            res.status(500).send({ status: "Error", messsage: "Error when deleting product" })
-        }
+        console.log(error);
+        res.status(500).send({ status: "error", message: "Error del servidor" });
     }
 });
 
-
 module.exports = router;
+

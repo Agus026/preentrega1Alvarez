@@ -1,37 +1,31 @@
-const fs = require("fs").promises;
-function overwriteProperties(objA, objB) {
-    Object.assign(objB, objA);
-    return objB;
+const mongoose = require("mongoose");
+const productModel = require("../Models/product.model.js");
+
+// Conexión a la base de datos
+async function connectToDatabase() {
+    try {
+        await mongoose.connect("mongodb+srv://agustinalvarez:Agusdb@cluster0.r0mj1.mongodb.net/Proyectofinal?retryWrites=true&w=majority&appName=Cluster0");
+        console.log('Conectado a MongoDB');
+    } catch (err) {
+        console.error('Error de conexión a MongoDB:', err);
+        process.exit(1);
+    }
 }
 
+connectToDatabase();
+
 class ProductManager {
-
-    static ultId = 0;
-
-
-    constructor(path) {
-        this.products = [];
-        this.path = path;
-    }
-
     async addProduct({ title, description, price, img, code, stock, thumbnails, category }) {
-
-
         if (!title || !description || !price || !img || !code || !stock || !category) {
-           throw new MiError("Todos los campos son obligatorios");
-            
+            throw new MiError("Todos los campos son obligatorios");
         }
 
-        this.products = await this.leerArchivo()
-
-        if (this.products.some(item => item.code === code)) {
-            throw new MiError("El codigo debe ser unico");
-            
+        const existingProduct = await productModel.findOne({ code });
+        if (existingProduct) {
+            throw new MiError("El código debe ser único");
         }
 
-
-        const nuevoProducto = {
-            id: this.products.length + 1,
+        const nuevoProducto = new productModel({
             title,
             description,
             price,
@@ -41,69 +35,43 @@ class ProductManager {
             category,
             status: true,
             thumbnails: thumbnails || [],
-        }
+        });
 
-        this.products.push(nuevoProducto);
-
-        await this.guardarArchivo(this.products);
+        await nuevoProducto.save();
     }
 
     async getProducts() {
-        const arrayProductos = await this.leerArchivo();
-        return arrayProductos;
+        return await productModel.find();
     }
-
 
     async getProductById(id) {
-
-        this.products = await this.leerArchivo();
-        const buscado = this.products.find(item => item.id === id);
-
-        if (!buscado) {
-            throw new MiError("Not found");
-        } else {
-            return buscado;
+        const producto = await productModel.findById(id);
+        if (!producto) {
+            throw new MiError("Producto no encontrado");
         }
+        return producto;
     }
-
-
-    async leerArchivo() {
-        const respuesta = await fs.readFile(this.path, "utf-8");
-        const arrayProductos = JSON.parse(respuesta);
-        return arrayProductos;
+    async getProductsPaginated(query, options) {
+        return await productModel.paginate(query, options);
     }
-
-    async guardarArchivo(arrayProductos) {
-        await fs.writeFile(this.path, JSON.stringify(arrayProductos, null, 2));
-    }
-
+    
     async actualizarProducto(id, productoB) {
-        const productoA = await this.getProductById(id)
-        const resultado = overwriteProperties(productoB, productoA);
-
-        await this.guardarArchivo(this.products);
-
-        console.log(resultado)
+        const productoA = await this.getProductById(id);
+        Object.assign(productoA, productoB);
+        await productoA.save();
+        return productoA;
     }
+
     async eliminarProducto(pid) {
-        this.products = await this.leerArchivo()
-        const productIndex = this.products.findIndex(p => p.id === pid);
-
-        if (productIndex === -1) {
-
-            return "Producto eliminado correctamente"
+        const producto = await productModel.findByIdAndDelete(pid);
+        if (!producto) {
+            throw new MiError("Producto no encontrado");
         }
-        
-        this.products.splice(productIndex, 1);
-        await this.guardarArchivo(this.products)
         return "Producto eliminado correctamente";
-
+        
     }
-
 }
 
-class MiError extends Error {
+class MiError extends Error {}
 
-}
-module.exports = {ProductManager, MiError}
-
+module.exports = { ProductManager, MiError };

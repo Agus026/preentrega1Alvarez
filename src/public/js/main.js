@@ -13,7 +13,7 @@ const renderProductos = (productos) => {
     productos.forEach(item => {
         const card = document.createElement("div");
         card.innerHTML = `<p>${item.title}</p>
-                          <p>${item.id}</p>
+                          <p>${item._id}</p>
                           <p>${item.description}</p>
                           <p>${item.price}</p>
                           <button> Eliminar </button>
@@ -21,11 +21,11 @@ const renderProductos = (productos) => {
         contenedorProductos.appendChild(card)
 
         card.querySelector("button").addEventListener("click", () => {
-            eliminarProducto(item.id);
+            eliminarProducto(item._id);
         })
     });
 };
 
 const eliminarProducto = (id) => {
     socket.emit("eliminarProducto", id)
-} ;
+};

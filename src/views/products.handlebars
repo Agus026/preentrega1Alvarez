@@ -1,0 +1,14 @@
+<h2>Productos</h2>
+
+<div id="contenedorProductos" ></div>
+
+{{#if hasPrevPage}}
+    <a href="/products?page={{prevPage}}"> Anterior </a>
+{{/if}}
+
+{{#if hasNextPage}}
+    <a href="/products?page={{nextPage}}"> Siguiente </a>
+{{/if}}
+<p>Pagina {{currentPage}} de {{totalPages}} </p>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>
+<script src="js/main.js"></script>

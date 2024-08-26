@@ -1,50 +1,142 @@
 [
   {
-    "title": "Azúcar",
-    "description": "Azúcar blanca",
-    "price": "500",
-    "code": "mno345",
-    "stock": 120,
-    "id": 5
-  },
-  {
-    "title": "Café",
-    "description": "Café molido",
-    "price": "2500",
-    "code": "pqr678",
-    "stock": 50,
-    "id": 6
-  },
-  {
-    "title": "Jabón",
-    "description": "Jabón en barra",
-    "price": "700",
-    "code": "stu901",
+    "title": "Wireless Mouse",
+    "description": "Ergonomic wireless mouse with adjustable DPI.",
+    "price": 25.99,
     "stock": 150,
-    "id": 7
-  },
-  {
-    "title": "Yogur",
-    "description": "Yogur natural",
-    "price": "600",
-    "code": "vwx234",
-    "stock": 90,
-    "id": 8
-  },
-  {
-    "title": "Aceite",
-    "description": "Aceite de oliva",
-    "price": "2000",
-    "code": "yzw567",
-    "stock": 70,
-    "id": 9
-  },
-  {
-    "title": "Papel higiénico",
-    "description": "Papel higiénico suave",
-    "price": "1500",
-    "code": "abc890",
+    "code": "WM001"
+},
+{
+    "title": "Mechanical Keyboard",
+    "description": "RGB mechanical keyboard with blue switches.",
+    "price": 75.50,
+    "stock": 80,
+    "code": "MK002"
+},
+{
+    "title": "Gaming Monitor",
+    "description": "27-inch 144Hz gaming monitor with 1ms response time.",
+    "price": 299.99,
+    "stock": 40,
+    "code": "GM003"
+},
+{
+    "title": "USB-C Hub",
+    "description": "6-in-1 USB-C hub with HDMI and Ethernet ports.",
+    "price": 35.00,
+    "stock": 200,
+    "code": "UC004"
+},
+{
+    "title": "External Hard Drive",
+    "description": "1TB portable external hard drive with USB 3.0.",
+    "price": 49.99,
     "stock": 120,
-    "id": 10
-  }
+    "code": "HD005"
+},
+{
+    "title": "Bluetooth Speaker",
+    "description": "Portable Bluetooth speaker with 12-hour battery life.",
+    "price": 60.00,
+    "stock": 100,
+    "code": "BS006"
+},
+{
+    "title": "Smartphone Stand",
+    "description": "Adjustable smartphone stand for hands-free use.",
+    "price": 15.99,
+    "stock": 250,
+    "code": "SS007"
+},
+{
+    "title": "Noise Cancelling Headphones",
+    "description": "Over-ear noise cancelling headphones with Bluetooth.",
+    "price": 120.00,
+    "stock": 70,
+    "code": "NC008"
+},
+{
+    "title": "Webcam",
+    "description": "1080p HD webcam with built-in microphone.",
+    "price": 45.00,
+    "stock": 90,
+    "code": "WC009"
+},
+{
+    "title": "Laptop Cooling Pad",
+    "description": "Laptop cooling pad with adjustable fan speeds.",
+    "price": 22.50,
+    "stock": 160,
+    "code": "LC010"
+},
+{
+    "title": "Gaming Chair",
+    "description": "Ergonomic gaming chair with adjustable armrests.",
+    "price": 180.00,
+    "stock": 35,
+    "code": "GC011"
+},
+{
+    "title": "Portable Projector",
+    "description": "Mini portable projector with 1080p resolution.",
+    "price": 199.99,
+    "stock": 50,
+    "code": "PJ012"
+},
+{
+    "title": "Smartwatch",
+    "description": "Smartwatch with heart rate monitor and GPS.",
+    "price": 85.00,
+    "stock": 110,
+    "code": "SW013"
+},
+{
+    "title": "Wireless Charger",
+    "description": "Fast wireless charger for smartphones and tablets.",
+    "price": 28.99,
+    "stock": 180,
+    "code": "WC014"
+},
+{
+    "title": "Action Camera",
+    "description": "4K action camera with waterproof case.",
+    "price": 150.00,
+    "stock": 65,
+    "code": "AC015"
+},
+{
+    "title": "Electric Scooter",
+    "description": "Foldable electric scooter with 20km range.",
+    "price": 350.00,
+    "stock": 25,
+    "code": "ES016"
+},
+{
+    "title": "Fitness Tracker",
+    "description": "Fitness tracker with sleep monitor and step counter.",
+    "price": 55.00,
+    "stock": 130,
+    "code": "FT017"
+},
+{
+    "title": "Drone",
+    "description": "Quadcopter drone with 4K camera and GPS.",
+    "price": 300.00,
+    "stock": 30,
+    "code": "DR018"
+},
+{
+    "title": "Portable Power Bank",
+    "description": "10000mAh portable power bank with fast charging.",
+    "price": 30.00,
+    "stock": 140,
+    "code": "PB019"
+},
+{
+    "title": "VR Headset",
+    "description": "Virtual reality headset with 360-degree viewing.",
+    "price": 200.00,
+    "stock": 40,
+    "code": "VR020"
+}
 ]

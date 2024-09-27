@@ -11,43 +11,55 @@ async function connectToDatabase() {
         console.log('Conectado a MongoDB');
     } catch (err) {
         console.error('Error de conexión a MongoDB:', err);
-        process.exit(1); 
+        process.exit(1);
     }
 }
-//mongodb://localhost:27017/
-//
 
 connectToDatabase();
 
-    
-    
-    router.get("/", async (req, res) => {
-        let limit = parseInt(req.query.limit) || 10;
-        let page = parseInt(req.query.page) || 1;
-        let query = req.query.query ? { $text: { $search: req.query.query } } : {};
-    
-        try {
-            const ProductList = await productModel.paginate(query, { limit, page });
-    
-            const productFinal = ProductList.docs.map(product => {
-                const { _id, ...rest } = product.toObject();
-                return rest;
-            });
-            res.render("products", {
-                products: productFinal,
-                hasPrevPage: ProductList.hasPrevPage,
-                hasNextPage: ProductList.hasNextPage,
-                prevPage: ProductList.prevPage,
-                nextPage: ProductList.nextPage,
-                currentPage: ProductList.page,
-                totalPages: ProductList.totalPages
-            });
-    
-        } catch (error) {
-            console.log("Error obteniendo productos paginados:", error);
-            res.status(500).send("Error interno del servidor");
-        }
-    });
-    
+router.get("/register", (req, res) => {
+    if(req.session){
+        return res.redirect("/perfil");
+    }
+    res.render("registro");
+});
+router.get("/login", (req, res) => {
+    if(req.session){
+        return res.redirect("/perfil");
+    }
+    res.render("login");
+});
+router.get("/perfil", (req, res) => {        
+    res.render("perfil", {user: req.session.user});
+});
+
+router.get("/", async (req, res) => {
+    let limit = parseInt(req.query.limit) || 10;
+    let page = parseInt(req.query.page) || 1;
+    let query = req.query.query ? { $text: { $search: req.query.query } } : {};
+
+    try {
+        const ProductList = await productModel.paginate(query, { limit, page });
+
+        const productFinal = ProductList.docs.map(product => {
+            const { _id, ...rest } = product.toObject();
+            return rest;
+        });
+        res.render("products", {
+            products: productFinal,
+            hasPrevPage: ProductList.hasPrevPage,
+            hasNextPage: ProductList.hasNextPage,
+            prevPage: ProductList.prevPage,
+            nextPage: ProductList.nextPage,
+            currentPage: ProductList.page,
+            totalPages: ProductList.totalPages
+        });
+
+    } catch (error) {
+        console.log("Error obteniendo productos paginados:", error);
+        res.status(500).send("Error interno del servidor");
+    }
+});
+
 
 module.exports = router;

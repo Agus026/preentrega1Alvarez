@@ -6,105 +6,91 @@ const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const generateToken = require("../utils/jsonwebtoken.js");
 
-router.post ("/register", async(req, res) => {
-    const { first_name, last_name, email, password, age } = req.body;
+// Registro de usuario
+router.post("/register", async (req, res) => {
+    const { username, first_name, last_name, email, password, age } = req.body;
     try {
         const existeUsuario = await UserModels.findOne({ email });
         if (existeUsuario) {
             return res.status(400).send({ error: "El usuario ya existe" });
         }
-        const nuevoUser = await UserModels.create({ first_name, last_name, email, password, age });
-        
-        await nuevoUser.save();
+
+        const hashedPassword = createHash(password);
+        const nuevoUser = await UserModels.create({ 
+            first_name, 
+            last_name, 
+            email, 
+            password: hashedPassword, 
+            age 
+        });
 
         const token = generateToken({
             first_name: nuevoUser.first_name,
-            last_name: nuevoUser.last_name,            
+            last_name: nuevoUser.last_name,
             email: nuevoUser.email,
-            age: nuevoUser.age,
-            password: createHash(password)
+            age: nuevoUser.age
         });
-        res.cookie("token", token,{
+
+        res.cookie("token", token, {
             maxAge: 3600000,
             httpOnly: true,
         });
-        res.status(200).send(nuevoUser);        
+
+        res.redirect("/api/sessions/current");
     } catch (error) {
         res.status(500).send({ error: "Error del servidor" });
-        console.log(error);
-        
+        console.error(error);
     }
 });
- 
 
-router.post("/register", passport.authenticate("register", {failureRedirect: "/api/sessions/failregister"}), async(req, res) => {
-
-    req.session.user = {
-        first_name: user.first_name,
-        last_name: user.last_name,
-        email: user.email,
-        age: user.age,
-    }
-    req.session = true;
-    res.redirect("/profile");
-} )
-router.get("/failregister", (req, res) => {
-    res.send("Fallo todo");
-})
-
-
-router.post("/login", passport.authenticate("login", {failureRedirect: "/api/sessions/faillogin"}), async (req, res) => {
-    req.session.user = {
-        first_name: user.first_name,
-        last_name: user.last_name,
-        email: user.email,
-        age: user.age,
-    }
-    req.session.login = true;
-    res.redirect("/profile");
-})
-router.get("/faillogin", (req, res) => {
-    res.send("Fallo todo");
-})
-
-//JSONWEBTOKEN
-router.get("/login", async (req, res) => {
+// Inicio de sesión
+router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     try {
-        const user = await UserModels.findOne({ email });
+        const usuarioHallado = await UserModels.findOne({ email });
         if (!user) {
-            res.status(404).send({ error: "Usuario incorrecto" });
-        } 
-        if (!isValidPassword(user, password)) {
-            res.status(401).send({ error: "contrseña incorrecta" });
+            return res.status(404).send({ error: "Usuario no encontrado" });
         }
-        const token = generateToken({
-            first_name: user.first_name,
-            last_name: user.last_name,
-            email: user.email,
-        });
-        res.send({message: "login correcto", token: token});
-    } catch (error) {        
+        if (!isValidPassword(usuarioHallado, password)) {
+            return res.status(401).send({ error: "Contraseña incorrecta" });
+        }
+
+        const token = generateToken();
+        
+        res.cookie("Token", token, {
+            maxAge: 3600000, 
+            httpOnly: true
+        })
+
+        res.redirect("/api/sessions/current"); 
+
+    } catch (error) {
         res.status(500).send({ error: "Error del servidor" });
     }
-})
-router.get("/logout", (req, res) => {
-    if (req.session.login) {
-        req.session.destroy();
-    }
+});
+
+router.post("/logout", (req, res) => {
+    res.clearCookie("token");
     res.redirect("/login");
-})
+});
 
-//GITHUB
-router.get("/github", passport.authenticate("github", {scope: ["profile", "user:email"]} ), async (req, res) => {
+router.get("/current", passport.authenticate("jwt", { session: false }), (req, res) => {
+    res.render("home", { user: req.user });
+});
 
-})
-router.get("/gitgubcallback", passport.authenticate("github", {failureRedirect: "/login"}) ,async (req, res) => {
-    req.sessionStore.user = req.user;
-    req.session.login = true;
-    res.redirect("/profile");
-})
+router.post("/admin", passport.authenticate("jwt", { session: false }), (req, res) => {
+    if(req.user.rol !== "Admin") {
+        return res.status(401).send({ error: "No autorizado" });
+    }
+    res.render("admin", { user: req.user });
+});
 
-
+// Ruta para el perfil
+router.get("/perfil", (req, res) => {
+    if (!req.session.user) {
+        return res.redirect("/login");
+    }
+    res.render("perfil", { user: req.session.user });
+});
 
 module.exports = router;

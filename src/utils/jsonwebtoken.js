@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const private_key = "clave_secreta";
 
-const generateToken = (user) => {
-    const token = jwt.sign(user, private_key, { expiresIn: "1h" });
+const generateToken = (usuarioHallado) => {
+    const token = jwt.sign({usuario: usuarioHallado.usuario, rol: usuarioHallado.rol,expiresIn: '24h' });
     return token;
 }
 
